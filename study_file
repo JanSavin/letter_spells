@@ -1,0 +1,193 @@
+//Отдельный файл чтобы сначало научиться прользоваться разными штуками и только потом включать эти штуки в основной файл
+
+#include <iostream>
+#include <windows.h>
+using namespace std;
+
+//модификаторы доступа
+//private - внутри класса
+//protected - наследник
+//public - общедоступный
+
+//базовый класс (обстрактный)
+class Npc
+{
+protected: //модификатор доступа (приватный - защищенный, доступ к полям, только внутри класса)
+	string name{ "персонаж" };
+	unsigned int health{ 10 };
+	float damage{ 5 };
+	unsigned short lvl{ 1 };
+public: //публичный модификатор доступ (использовать метод можно в любом месте)
+	virtual void GetInfo() //метод класса
+	{
+		cout << "Имя - " << name << endl;
+		cout << "Здоровье - " << health << endl;
+		cout << "Урон - " << damage << endl;
+	}
+	virtual void Create() {};
+};
+
+class Elf* : public Npc
+{
+private:
+	string npc_class = { "Эльф" };
+	unsigned short strenght{ 15 };
+	string weapons[4] = { "ничего","хлипкий лук","продвинутый лук","лук снайпера" };
+public:
+	Elf()
+	{
+		name = { "Эльф" };
+		health = { 8 };
+		damage = { 3 };
+	}
+	Elf(string name, unsigned int health, float damage)
+	{
+		this->name = name;
+		this->health = health;
+		this->damage = damage;
+	}
+
+	void GetWeapons()
+	{
+		cout << name << " взял " << weapons[lvl - 1];
+	}
+	void GetInfo() override //метод класса
+	{
+		cout << "Персонаж: " << npc_class << endl;
+		Npc::GetInfo();
+		cout << "Сила - " << strenght << endl;
+		for (int i = 0;i < lvl;i++)
+		{
+			cout << "Оружие (доступное) - " << weapons[i] << endl;
+		}
+	}
+	void Create() override
+	{
+		cout << "Персонаж эльф создан." << endl;
+		cout << "Назовите персонажа: ";
+		cin >> name;
+		GetInfo();
+		GetWeapons();
+	}
+
+	~Elf()
+	{
+		cout << name << " покинул поле." << endl;
+	}
+};
+
+//наследование доступных свойств и методов класса
+class Hiller : public Npc
+{
+private:
+	string npc_class = { "Лекарь" };
+	unsigned short strenght{ 10 };
+	string weapons[4] = { "подорожник","малая аптечка","исцеляющий снадобья","хирургические приблуды" };
+public:
+	Hiller()
+	{
+		name = { "Лекарь" };
+		health = { 30 };
+		damage = { 1 };
+	}
+	Hiller(string name, unsigned int health, float damage)
+	{
+		this->name = name;
+		this->health = health;
+		this->damage = damage;
+	}
+
+	void GetWeapons()
+	{
+		cout << name << " взял " << weapons[lvl - 1];
+	}
+	void GetInfo() //метод класса
+	{
+		cout << "Персонаж: " << npc_class << endl;
+		Npc::GetInfo();
+		cout << "Исцеление - " << strenght << endl;
+		for (int i = 0;i < lvl;i++)
+		{
+			cout << "Предметы (доступное) - " << weapons[i] << endl;
+		}
+	}
+	void Create() override
+  {
+    cout << "Вы создали Лекаря" << endl;
+    cout << "Введите имя персонажа\t";
+    cin >> name;
+    GetInfo();
+    GetWeapons();
+  }
+
+  //перегрузка
+  bool operator == (const Hiller& hiller) const
+  {
+    return ((hiller.damage == this->damage) && (hiller.health == this->health)
+      && (hiller.strenght == this->strenght));
+  }
+
+	~Hiller()
+	{
+		cout << name << " покинул поле." << endl;
+	}
+};
+
+class BadGuy
+{
+protected: 
+	string name;
+	unsigned int health{ 10 };
+	float damage{ 5 };
+	unsigned short lvl{ 1 };
+	bool isAlive;
+public:
+	BadGuy(string n, unsigned int h, float d, unsigned short l, bool is):
+		name(n),health(h),damage(d),lvl(l),isAlive(is)
+	{
+		cout << n << "coming..\n";
+	}
+	BadGuy():BadGuy("Dark Lord", 100, 150, 5, true) {}
+};
+
+class Player
+{
+  public:
+    void Create(Npc* player)
+    {
+      player->Create();
+    }
+};
+
+int main()
+{
+	setlocale(LC_ALL, "Rus");
+	SetConsoleCP(1251);
+	SetConsoleOutputCP(1251);
+
+	
+  Hiller* Hiller = new Hiller();
+  
+  Player* player = new Player();
+
+  unsigned short choise = 1;
+  //Проверка условия выбора
+  cin >> choise;
+  while (choise > 2 || choise < 1)
+  {
+    cout << "Повтори снова\n";
+    cin >> choise;
+  }
+  if (choise == 1)
+  {
+    cout << "Выбор от 1 до 3";
+    cin >> choise;
+    while (choise > 3 || choise < 1)
+    {
+      cout << "Повтори снова\n";
+      cin >> choise;
+    }
+  }
+
+	return 0;
+}
