@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <windows.h>
+#include <fstream>
 using namespace std;
 
 //модификаторы доступа
@@ -25,9 +26,34 @@ public: //публичный модификатор доступ (использ
 		cout << "Урон - " << damage << endl;
 	}
 	virtual void Create() {};
+	void Save(){
+		ofstream saveSystem("save.bin",ios:: binary);
+	if (!saveSystem.is_open()){
+	cout << "Ошибка сохранения\n";
+	}else{
+		size_t length = name.length();
+	saveSystem.write(reinterpret_cast<const char*>(&(length)), sizeof(length));
+	saveSystem.write(reinterpret_cast<const char*>(&(name)), sizeof(name));
+	saveSystem.write(reinterpret_cast<const char*>(&(health)), sizeof(health));
+	saveSystem.write(reinterpret_cast<const char*>(&(damage)), sizeof(damage));
+	saveSystem.write(reinterpret_cast<const char*>(&(lvl)), sizeof(lvl));}
+};
+	void Load(){
+	ifstream loadSystem("save.txt", ios::binary);
+	Npc npc;
+	if (!loadSystem.is_open()){
+	cout << "Связь с космосом потеряна\nПамять о ваших прошлых путешествиях повреждена\n";
+	return npc;
+	}else{
+	loadSystem.read(reinterpret_cast<char*>(&(npc.name)), sizeof(npc.name));
+	loadSystem.read(reinterpret_cast<char*>(&(npc.health)), sizeof(npc.health));
+	loadSystem.read(reinterpret_cast<char*>(&(npc.damage)), sizeof(npc.damage));
+	loadSystem.read(reinterpret_cast<char*>(&(npc.lvl)), sizeof(npc.lvl));
+	return npc;
+	};}
 };
 
-class Elf* : public Npc
+class Elf : public Npc
 {
 private:
 	string npc_class = { "Эльф" };
@@ -156,6 +182,14 @@ class Player
     void Create(Npc* player)
     {
       player->Create();
+    }
+	void Save(Npc* player)
+    {
+      player->Save();
+    }
+	Npc Load(Npc* player)
+    {
+      return player->Load();
     }
 };
 
