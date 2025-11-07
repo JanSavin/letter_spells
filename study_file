@@ -5,6 +5,45 @@
 #include <fstream>
 using namespace std;
 
+//отличие sctruct от class
+
+enum class vq
+{
+	мусор, обычное, редкоее //эквивалент перечисления
+};
+
+struct Treasure //по умолчанию public
+{
+	string name{"добыча"};
+	string quality = vq::мусор;
+	unsigned int price{ 0 };
+
+	switch (quality){
+	case vq::мусор;
+	case vq::мусор;
+	case vq::мусор;
+	casedefault vq::мусор;
+	}
+
+
+};
+// class Treasure //по умолчанию private
+// {
+// 	string name{"добыча"};
+// 	string quality[3]{"мусор","обфчное","редкое"};
+// 	unsigned int price{ 0 };
+// };
+struct Cloth : Treasure //наследование по умолчанию public
+Cloth(ValueQuality quality) : Treasure(quality) {};
+string valueSite[5]{ "обувь", "перчатки", "шлем", "нагрудник", "пояс" };
+string site{NULL};
+unsigned short armor{ 1 };
+
+cloth ckoth;
+cloth.arrmor
+
+
+//наследлванеи
 //модификаторы доступа
 //private - внутри класса
 //protected - наследник
@@ -25,7 +64,14 @@ public: //публичный модификатор доступ (использ
 		cout << "Здоровье - " << health << endl;
 		cout << "Урон - " << damage << endl;
 	}
-	virtual void Create() {};
+	string GetName() const { return name; };
+	unsigned int GetHealth() const { return health; };
+	float GetDamage() const { return damage; };
+	unsigned short GetLvl() const { return lvl; };
+
+	//Дружественные функции
+	friend void TakeDamage(Npc& npc, float damage) {};
+
 	void Save(){
 		ofstream saveSystem("save.bin",ios:: binary);
 	if (!saveSystem.is_open()){
@@ -193,11 +239,25 @@ class Player
     }
 };
 
+void TakeDamage(Npc& npc, float damage) {
+	float* tempHealth = new float;
+	*tempHealth = (float)npc.health - damage; //добавить свойство (броня) и ввести его в формулу
+	if (*tempHealth < 0)
+	{
+		cout << "Персонаж мёртв" << endl;
+	}else{
+		npc.health = *tempHealth;
+	}
+	delete tempHealth;
+	tempHealth = nullptr;
+}
+
 int main()
 {
 	setlocale(LC_ALL, "Rus");
 	SetConsoleCP(1251);
 	SetConsoleOutputCP(1251);
+ 
 
 	
   Hiller* Hiller = new Hiller();
@@ -222,6 +282,23 @@ int main()
       cin >> choise;
     }
   }
+
+	unsigned short TestChoise(unsigned short maxChoise, string text)
+	{
+	unsigned short choise = 1;
+	cin >> choise;
+	while (choise > maxChoise || choise < 1)
+	{
+		cout << text;
+		cin >> choise;
+	}
+	return choise;
+	};
+	choise = TestChoise(3,"");
+	if (choise == 1){
+		
+	}
+
 
 	return 0;
 }
